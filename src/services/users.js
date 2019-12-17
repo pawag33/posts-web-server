@@ -52,7 +52,7 @@ const addUser = async (email,password,userName) =>{
     }
     catch(error){
         console.log(error);
-        // log error
+        // log err
         throw error;
     }
 }
