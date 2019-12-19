@@ -11,7 +11,7 @@ router.post('/users', async (req, res) => {
         const user = await usersService.addUser(req.body.email, req.body.password,req.body.userName);
         // sendWelcomeEmail(user.email, user.name)
         const token = await tokensService.generateAuthToken(user);
-        res.status(201).send(token)
+        res.status(201).send({token:token})
     } catch (e) {
         res.status(400).send(e)
     }
@@ -33,7 +33,7 @@ router.post('/users/login', async (req, res) => {
     try {
         const user = await usersService.findUserByCredentials(req.body.email, req.body.password);
         const token = await tokensService.generateAuthToken(user);
-        res.send(token);
+        res.send({token:token});
     } catch (e) {
         res.status(401).send();
     }
