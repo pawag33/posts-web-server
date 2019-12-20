@@ -1,6 +1,6 @@
 // const { userOneId, userOne, setupDatabase } = require('./fixtures/db');
 const usersService = require('../src/services/users');
-const usersService = require('../src/services/tokens');
+const tokensService = require('../src/services/tokens');
 const request = require('supertest');
 const app = require('../src/app');
 const jwt = require('jsonwebtoken');
@@ -39,6 +39,8 @@ test('Should login existing user', async () => {
     }).expect(200);
 
      // verify token
+     expect(response.body.token).not.toBeNull();
+
      const decoded = jwt.verify(response.body.token, process.env.JWT_SECRET);
 
      expect(decoded).not.toBeNull();
@@ -53,6 +55,7 @@ test('Should login existing user', async () => {
         password: password
     }).expect(200);
 
+    expect(response.body.token).not.toBeNull();
      // verify token
      const decoded = jwt.verify(response.body.token, process.env.JWT_SECRET);
 

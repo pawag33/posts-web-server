@@ -3,6 +3,9 @@ const cors = require('./middleware/cors');
 // require('./db/mongoose')
 const userRouter = require('./routers/user')
 // const taskRouter = require('./routers/task')
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 
 const app = express();
 
