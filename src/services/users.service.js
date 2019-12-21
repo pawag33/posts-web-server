@@ -1,8 +1,8 @@
 const bcrypt = require('bcryptjs');
-const userRepository = require('../repository/users.repository');
+const usersRepository = require('../repository/users.repository');
 
 const findUserByCredentials = async (email,password) => {
-    const user = await userRepository.findUser(email);
+    const user = await usersRepository.findUser(email);
     if(!user){
         // log error
         const error = new Error("User not found")
@@ -22,12 +22,12 @@ const findUserByCredentials = async (email,password) => {
 
 const addUser = async (user) =>{
     try {
-        const existUser = await userRepository.findUser(user.email);
+        const existUser = await usersRepository.findUser(user.email);
         if(existUser){
             throw Error(`user with email ${user.email} already exist`);
         }
         user.password = await bcrypt.hash(user.password, 8);
-        const userDbModel = await userRepository.addUser(user);
+        const userDbModel = await usersRepository.addUser(user);
         return userDbModel;
     }
     catch(error){
@@ -39,7 +39,7 @@ const addUser = async (user) =>{
 
 const deleteUser = async (email) => {
     try{
-       await userRepository.deleteUser(email);
+       await usersRepository.deleteUser(email);
     }
     catch(error){
         console.log(error);
@@ -49,14 +49,15 @@ const deleteUser = async (email) => {
 }
 
 const findUser = async (email) =>{
-    const user = await userRepository.findUser(email);
-    if(!user){
-        // log error
-        console.log(error);
-        throw new Error("User not found");
+    try{
+        const user = await usersRepository.findUser(email);
+        return user;
     }
-
-    return user;
+    catch(err){
+        console.log(err);
+       // log error
+        throw err;
+    }
 };
  
 module.exports = {

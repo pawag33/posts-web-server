@@ -26,8 +26,7 @@ const findUser = async (email) => {
 
 const deleteUser = async (email) => {
     try{
-        const foundUser = await UserDbModel.findOne({email:email });
-        await foundUser.remove();
+       await UserDbModel.deleteOne({email:email });
     }
     catch(err){
         console.log(err);

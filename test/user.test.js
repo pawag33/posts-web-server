@@ -16,7 +16,11 @@ beforeAll(() => {
   });
 
   afterAll(async () => {
-    await usersService.deleteUser(email);
+      try{
+          // in case of delete test was failed
+          await usersService.deleteUser(email);
+      }
+      catch(err) {}
     db.disconetFromDb();
   });
 
@@ -59,3 +63,33 @@ test('Should login existing user', async () => {
     // in future validate token that they exist in db
    // expect(response.body.token).toBe(user.tokens[1].token)
 });
+
+// test('Should delete account for user', async () => {
+
+//     const token = 
+
+//     await request(app)
+//         .delete('/user')
+//         .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+//         .send()
+//         .expect(200);
+//     const user = await usersService.findUser(email);
+//     expect(user).toBeNull();
+// })
+
+// test('Should delete existing user', async () => {
+//     const response = await request(app).delete('/user').send({
+//         email: email,
+//         password: password
+//     }).expect(200);
+
+//      // verify token
+//      expect(response.body.token).not.toBeNull();
+
+//      const decoded = jwt.verify(response.body.token, process.env.JWT_SECRET);
+
+//      expect(decoded).not.toBeNull();
+  
+//     // in future validate token that they exist in db
+//    // expect(response.body.token).toBe(user.tokens[1].token)
+// });

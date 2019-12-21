@@ -1,17 +1,26 @@
 const jwt = require('jsonwebtoken');
-const usersService = require('../services/users.service').default;
+const usersService = require('../services/users.service');
+const tokensService = require('../services/tokens.service');
 
 
 const auth = async (req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '');
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await usersService.findUser(decoded.email);
+        const foundUser = await usersService.findUser(decoded.email);
+        if(!foundUser){
+            throw Error('User not found');
+        }
+        const foundToken = await tokensService.findToken(token,foundUser._id);
+        if(!foundToken){
+            throw Error('Token not found');
+        }
 
         req.token = token;
-        req.user = user;
+        req.user = foundUser;
         next()
     } catch (e) {
+        console.log(e);
         res.status(401).send();
     }
 }

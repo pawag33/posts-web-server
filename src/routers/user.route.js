@@ -11,9 +11,7 @@ router.post('/user', async (req, res) => {
         const user = await usersService.addUser(req.body);
         // sendWelcomeEmail(user.email, user.name)
         const token = await tokensService.generateAuthToken(user);
-        delete user.password;
-        delete user._id;
-        res.status(201).send({token:token, user:user});
+        res.status(201).send({token:token, user:{email:user.email,name:user.name}});
     } catch (e) {
         console.log(e);
         // log e
