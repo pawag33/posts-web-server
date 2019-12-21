@@ -1,5 +1,5 @@
-const {User} = require('../entities/user');
 const bcrypt = require('bcryptjs');
+const { User } = require('../entities/user');
 
 // mock 
 const mockUsers = [new User("test@test.com","$2a$08$UZvpPUHfKnQEO9IwgkLMmOyoATWmMItKj.YxtLNIbo4wc0UE9We2K","test-username")];

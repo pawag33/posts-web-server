@@ -3,17 +3,16 @@ const usersService = require('../services/users');
 const tokensService = require('../services/tokens');
 const auth = require('../middleware/auth');
 // const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account');
-const router = new express.Router()
-
+const router = new express.Router();
 
 router.post('/users', async (req, res) => {
     try {
         const user = await usersService.addUser(req.body.email, req.body.password,req.body.userName);
         // sendWelcomeEmail(user.email, user.name)
         const token = await tokensService.generateAuthToken(user);
-        res.status(201).send({token:token})
+        res.status(201).send({token:token});
     } catch (e) {
-        res.status(400).send(e)
+        res.status(400).send(e);
     }
 });
 

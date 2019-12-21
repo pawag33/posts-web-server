@@ -12,8 +12,6 @@ const userName = 'coolUserName';
 const password = 'Very@StrongPass777';
 
 test('Should signup a new user', async () => {
-   
-
     const response = await request(app).post('/users').send({
         userName: userName,
         email: email,

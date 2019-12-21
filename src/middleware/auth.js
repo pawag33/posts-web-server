@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const {User} = require('../entities/user');
-const usersService = require('../services/users');
+const usersService = require('../services/users').default;
 
 
 const auth = async (req, res, next) => {
