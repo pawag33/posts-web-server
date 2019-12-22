@@ -9,6 +9,8 @@ const db = require('../src/db/mongoose');
 const email = 'test1@test.com';
 const name = 'jhonSmith';
 const password = 'Very@StrongPass777';
+let globalToken;
+let globalUser;
 
 
 beforeAll(() => {
@@ -18,19 +20,13 @@ beforeAll(() => {
   afterAll(async () => {
       try{
           // in case of delete test was failed
-          await usersService.deleteUser(email);
+         await  usersService.deleteUser(email);
       }
       catch(err) {}
-    db.disconetFromDb();
+      await db.disconnetFromDb();
   });
 
-  test('Should signup a new user with invalid user data', async () => {
-     await request(app).post('/user').send({
-        name: name,
-        password: password
-    }).expect(400);
-});
-
+ 
 
 test('Should signup a new user', async () => {
     const response = await request(app).post('/user').send({
@@ -52,6 +48,12 @@ test('Should signup a new user', async () => {
     expect(decoded).not.toBeNull();
 
     expect(user.password).not.toBe(password);
+
+    const token = await tokensService.findToken(response.body.token,user._id);
+    expect(token).not.toBeNull();
+
+    globalToken = response.body.token;
+    globalUser = user;
 });
 
 test('Should login existing user', async () => {
@@ -60,43 +62,26 @@ test('Should login existing user', async () => {
         password: password
     }).expect(200);
 
+
      // verify token
      expect(response.body.token).not.toBeNull();
-
      const decoded = jwt.verify(response.body.token, process.env.JWT_SECRET);
-
      expect(decoded).not.toBeNull();
-  
-    // in future validate token that they exist in db
-   // expect(response.body.token).toBe(user.tokens[1].token)
+     const token = await tokensService.findToken(response.body.token,globalUser._id)
+     expect(token).not.toBeNull();
 });
 
-// test('Should delete account for user', async () => {
+test('Should delete account for user', async () => {
+    await request(app)
+        .delete('/user')
+        .set('Authorization', `Bearer ${globalToken}`)
+        .send()
+        .expect(200);
 
-//     const token = 
+    const user = await usersService.findUser(email);
+    expect(user).toBeNull();
+    const anyUserToken = await tokensService.findUserTokens(globalUser._id);
+    expect(anyUserToken).toEqual([]);
+});
 
-//     await request(app)
-//         .delete('/user')
-//         .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
-//         .send()
-//         .expect(200);
-//     const user = await usersService.findUser(email);
-//     expect(user).toBeNull();
-// })
 
-// test('Should delete existing user', async () => {
-//     const response = await request(app).delete('/user').send({
-//         email: email,
-//         password: password
-//     }).expect(200);
-
-//      // verify token
-//      expect(response.body.token).not.toBeNull();
-
-//      const decoded = jwt.verify(response.body.token, process.env.JWT_SECRET);
-
-//      expect(decoded).not.toBeNull();
-  
-//     // in future validate token that they exist in db
-//    // expect(response.body.token).toBe(user.tokens[1].token)
-// });

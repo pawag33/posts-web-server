@@ -9,7 +9,7 @@ const connectToDb = async () => {
    await mongoose.connect(process.env.MONGODB_URL, { useUnifiedTopology: true, useNewUrlParser: true,  useCreateIndex:true});
 }
 
-const disconetFromDb = async () => {
+const disconnetFromDb = async () => {
      mongoose.connection.close();
 }
 
@@ -19,7 +19,7 @@ const disconetFromDb = async () => {
 
 module.exports = {
     connectToDb,
-    disconetFromDb
+    disconnetFromDb
 }
 
 

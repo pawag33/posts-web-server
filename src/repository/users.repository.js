@@ -13,26 +13,12 @@ const addUser = async (user) => {
 }
 
 const findUser = async (email) => {
-    try{
-        const foundUser = await UserDbModel.findOne({email:email });
-        return foundUser;
-    }
-    catch(err){
-        console.log(err);
-       // log error
-        throw err;
-    }
-}
+    const foundUser = await UserDbModel.findOne({email:email });
+    return foundUser;
+};
 
 const deleteUser = async (email) => {
-    try{
-       await UserDbModel.deleteOne({email:email });
-    }
-    catch(err){
-        console.log(err);
-       // log error
-        throw err;
-    }
+    await UserDbModel.deleteOne({email:email });
 }
 
 module.exports = {

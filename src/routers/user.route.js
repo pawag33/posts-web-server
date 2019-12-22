@@ -1,21 +1,12 @@
 const express = require('express');
-const { validationResult } = require('express-validator');
 const usersService = require('../services/users.service');
 const tokensService = require('../services/tokens.service');
-const validator = require('../middleware/validator');
 const auth = require('../middleware/auth');
 // const { sendWelcomeEmail, sendCancelationEmail } = require('../emails/account');
 const router = new express.Router();
 
-router.post('/user', validator.validate('createUser'), async (req, res) => {
+router.post('/user', async (req, res) => {
     try {
-        const errors = validationResult(req);
-
-        if (!errors.isEmpty()) {
-            res.status(400).json({ errors: errors.array() });
-            return;
-        }
-
         const user = await usersService.addUser(req.body);
         // sendWelcomeEmail(user.email, user.name)
         const token = await tokensService.generateAuthToken(user);
@@ -30,10 +21,10 @@ router.post('/user', validator.validate('createUser'), async (req, res) => {
 
 router.delete('/user', auth, async (req, res) => {
     try {
-        await usersService.deleteUser(req.user.email);
-        await tokensService.deleteToken(req.token);
+       await usersService.deleteUser(req.user.email);
+       await tokensService.deleteAllUserTokens(req.user._id);
         // sendCancelationEmail(req.user.email, req.user.name);
-        res.status(200);
+        res.status(200).send();
     } catch (e) {
         console.log(e);
         // log e
