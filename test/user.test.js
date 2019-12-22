@@ -24,6 +24,13 @@ beforeAll(() => {
     db.disconetFromDb();
   });
 
+  test('Should signup a new user with invalid user data', async () => {
+     await request(app).post('/user').send({
+        name: name,
+        password: password
+    }).expect(400);
+});
+
 
 test('Should signup a new user', async () => {
     const response = await request(app).post('/user').send({
