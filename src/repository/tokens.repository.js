@@ -5,12 +5,12 @@ const saveToken = async (user,tokenStr) => {
     await token.save();
 };
 
-const findToken = async (tokenStr,userId) => {
+const getToken = async (tokenStr,userId) => {
      const token = await TokenDbModel.findOne({token:tokenStr,user:userId });
     return token;
 };
 
-const findUserTokens = async (userId) => {
+const getUserTokens = async (userId) => {
    const tokens = await TokenDbModel.find({user:userId });
    return tokens;
 };
@@ -25,8 +25,8 @@ const deleteAllUserTokens = async (userId) => {
 
 module.exports = {
     saveToken,
-    findToken,
+    getToken,
     deleteAllTokens,
     deleteAllUserTokens,
-    findUserTokens
+    getUserTokens
 }
