@@ -8,14 +8,14 @@ const generateAuthToken = async function (user) {
 };
 
 
-const findToken = async (token,userId) => {
-    const foundToken = await tokensRepository.findToken(token,userId);
+const getToken = async (token,userId) => {
+    const foundToken = await tokensRepository.getToken(token,userId);
     return foundToken;
 
 };
 
-const findUserTokens = async (userId) => {
-    const tokens = await tokensRepository.findUserTokens(userId);
+const getUserTokens = async (userId) => {
+    const tokens = await tokensRepository.getUserTokens(userId);
     return tokens;
  };
  
@@ -32,9 +32,9 @@ const deleteAllUserTokens = async (userId) => {
 
 module.exports = {
     generateAuthToken,
-    findToken,
+    getToken,
     deleteAllUserTokens,
     deleteAllTokens,
-    findUserTokens
+    getUserTokens
 }
 

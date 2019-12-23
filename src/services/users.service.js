@@ -1,9 +1,9 @@
 const bcrypt = require('bcryptjs');
 const usersRepository = require('../repository/users.repository');
 
-const findUserByCredentials = async (email,password) => {
-    const user = await usersRepository.findUser(email);
-    if(!user){
+const getUserByCredentials = async (email, password) => {
+    const user = await usersRepository.getUser(email);
+    if (!user) {
         // log error
         const error = new Error("User not found")
         console.log(error);
@@ -20,49 +20,42 @@ const findUserByCredentials = async (email,password) => {
     return user;
 }
 
-const addUser = async (user) =>{
-    try {
-        const existUser = await usersRepository.findUser(user.email);
-        if(existUser){
-            throw Error(`user with email ${user.email} already exist`);
-        }
-        user.password = await bcrypt.hash(user.password, 8);
-        const userDbModel = await usersRepository.addUser(user);
-        return userDbModel;
+const createUser = async (user) => {
+    const existUser = await usersRepository.getUser(user.email);
+    if (existUser) {
+        throw Error(`user with email ${user.email} already exist`);
     }
-    catch(error){
+    user.password = await bcrypt.hash(user.password, 8);
+    const userDbModel = await usersRepository.createUser(user);
+    return userDbModel;
+}
+
+const deleteUser = async (email) => {
+    try {
+        await usersRepository.deleteUser(email);
+    }
+    catch (error) {
         console.log(error);
-        // log err
+        // log error
         throw error;
     }
 }
 
-const deleteUser = async (email) => {
-    try{
-       await usersRepository.deleteUser(email);
-    }
-    catch(error){
-        console.log(error);
-         // log error
-         throw error;
-    }
-}
-
-const findUser = async (email) =>{
-    try{
-        const user = await usersRepository.findUser(email);
+const getUser = async (email) => {
+    try {
+        const user = await usersRepository.getUser(email);
         return user;
     }
-    catch(err){
+    catch (err) {
         console.log(err);
-       // log error
+        // log error
         throw err;
     }
 };
- 
+
 module.exports = {
-    findUserByCredentials,
-    findUser,
+    getUserByCredentials,
+    getUser,
     deleteUser,
-    addUser
+    createUser
 }
