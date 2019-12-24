@@ -7,7 +7,7 @@ const router = new express.Router();
 router.post('/post',auth, async (req, res) => {
     try {
         const post = await postsService.createPost(req.body,req.user._id);
-        res.status(201).send({ title: post.title,content:post.content});
+        res.status(201).send({ title: post.title,content:post.content,id:post_id,creator:req.user.name});
     } catch (e) {
         console.log(e);
         // log e
@@ -41,7 +41,7 @@ router.update('/post:id', auth, async (req, res) => {
 router.get('/post:id', async (req, res) => {
     try {
        const post =  await postsService.getUserPost(req.params.id)
-       res.status(200).send(post);
+       res.status(200).send({title:post.title,id:post_id,content:post.content,creator:post.creator.name});
     } catch (e) {
         console.log(e);
         // log e
@@ -52,6 +52,7 @@ router.get('/post:id', async (req, res) => {
 router.get('/post', async (req, res) => {
     try {
        const posts =  await postsService.getUsersPosts();
+       // TODO : hide user props !!!!!!!!!!!!!
        res.status(200).send(posts);
     } catch (e) {
         console.log(e);
