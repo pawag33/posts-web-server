@@ -7,14 +7,14 @@ const db = require('../src/db/mongoose');
 
 
 const email = 'test1@test.com';
-const name = 'jhonSmith';
+const name = 'John-Smith';
 const password = 'Very@StrongPass777';
 let globalToken;
 let globalUser;
 
 
 beforeAll(() => {
-    db.connectToDb();
+   await db.connectToDb();
   });
 
   afterAll(async () => {
@@ -39,7 +39,7 @@ test('Should signup a new user', async () => {
     expect(response.body.user).not.toBeNull();
 
     // Assert that the database was changed correctly
-    const user = await usersService.findUser(email);
+    const user = await usersService.getUser(email);
     expect(user).not.toBeNull();
 
     // verify token
@@ -49,7 +49,7 @@ test('Should signup a new user', async () => {
 
     expect(user.password).not.toBe(password);
 
-    const token = await tokensService.findToken(response.body.token,user._id);
+    const token = await tokensService.getToken(response.body.token,user._id);
     expect(token).not.toBeNull();
 
     globalToken = response.body.token;
@@ -67,7 +67,7 @@ test('Should login existing user', async () => {
      expect(response.body.token).not.toBeNull();
      const decoded = jwt.verify(response.body.token, process.env.JWT_SECRET);
      expect(decoded).not.toBeNull();
-     const token = await tokensService.findToken(response.body.token,globalUser._id)
+     const token = await tokensService.getToken(response.body.token,globalUser._id)
      expect(token).not.toBeNull();
 });
 
@@ -78,9 +78,9 @@ test('Should delete account for user', async () => {
         .send()
         .expect(200);
 
-    const user = await usersService.findUser(email);
+    const user = await usersService.getUser(email);
     expect(user).toBeNull();
-    const anyUserToken = await tokensService.findUserTokens(globalUser._id);
+    const anyUserToken = await tokensService.getUserTokens(globalUser._id);
     expect(anyUserToken).toEqual([]);
 });
 
