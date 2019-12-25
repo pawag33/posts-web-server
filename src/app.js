@@ -8,9 +8,6 @@ if (process.env.NODE_ENV !== 'production') {
     dotenv.config();
 }
 
-//(async () => { await s.deleteAllTokens();})();
-
-
 const app = express();
 
 app.use(express.json());
