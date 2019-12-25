@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors);
 
 app.use(userRouter);
-app.use(postRouter)
+app.use(postRouter);
 
 // Resource not found
 app.use((_req, res) => {

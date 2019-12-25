@@ -31,7 +31,7 @@ beforeAll(async () => {
          await  usersService.deleteUser(email);
          await tokensService.deleteAllUserTokens(globalUser._id);
          // if test to delete post failed 
-         await postsService.deleteUserPost(createdPost.id,globalUser._id)
+         await postsService.deleteUserPost(createdPost.id,globalUser._id);
       }
       catch(err) {}
       await db.disconnetFromDb();

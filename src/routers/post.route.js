@@ -15,7 +15,6 @@ router.post('/post',auth, async (req, res) => {
     }
 });
 
-
 router.delete('/post/:id', auth, async (req, res) => {
     try {
        await postsService.deleteUserPost(req.params.id,req.user._id)

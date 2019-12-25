@@ -5,28 +5,24 @@ const app = require('../src/app');
 const jwt = require('jsonwebtoken');
 const db = require('../src/db/mongoose');
 
-
 const email = 'test1@test.com';
 const name = 'John-Smith';
 const password = 'Very@StrongPass777';
 let globalToken;
 let globalUser;
 
-
 beforeAll( async () => {
    await db.connectToDb();
-  });
+});
 
-  afterAll(async () => {
+afterAll(async () => {
       try{
           // in case of delete test was failed
          await  usersService.deleteUser(email);
       }
       catch(err) {}
       await db.disconnetFromDb();
-  });
-
- 
+});
 
 test('Should signup a new user', async () => {
     const response = await request(app).post('/user').send({
