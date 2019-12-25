@@ -1,10 +1,8 @@
 const express = require('express');
 const cors = require('./middleware/cors');
-// require('./db/mongoose')
 const userRouter = require('./routers/user.route');
-//const s = require('./services/tokens.service');
+const postRouter = require('./routers/post.route')
 
-// const taskRouter = require('./routers/task')
 if (process.env.NODE_ENV !== 'production') {
     const dotenv = require('dotenv');
     dotenv.config();
@@ -19,7 +17,7 @@ app.use(express.json());
 app.use(cors);
 
 app.use(userRouter);
-// app.use(taskRouter)
+app.use(postRouter)
 
 // Resource not found
 app.use((_req, res) => {

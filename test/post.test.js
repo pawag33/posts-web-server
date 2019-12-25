@@ -3,12 +3,11 @@ const tokensService = require('../src/services/tokens.service');
 const postsService = require('../src/services/posts.service');
 const request = require('supertest');
 const app = require('../src/app');
-const jwt = require('jsonwebtoken');
 const db = require('../src/db/mongoose');
 
 
-const postContent = 'This is post content';
-const postTitle = 'Post title';
+let postContent = 'This is post content';
+let postTitle = 'Post title';
 
 const email = 'test3@test.com';
 const name = 'John-Smith';
@@ -16,20 +15,23 @@ const password = 'Very@StrongPass777';
 
 let globalToken;
 let globalUser;
+let createdPost;
 
 
-beforeAll(() => {
+beforeAll(async () => {
    await db.connectToDb();
    // create mock user
    
    globalUser = await usersService.createUser({email:email,password:password,name:name});
-   const anyUserToken = await tokensService.getUserTokens(globalUser._id);
-   globalToken = anyUserToken[0];
-  });
+   globalToken = await tokensService.generateAuthToken(globalUser);
+});
 
   afterAll(async () => {
       try{
          await  usersService.deleteUser(email);
+         await tokensService.deleteAllUserTokens(globalUser._id);
+         // if test to delete post failed 
+         await postsService.deleteUserPost(createdPost.id,globalUser._id)
       }
       catch(err) {}
       await db.disconnetFromDb();
@@ -38,31 +40,77 @@ beforeAll(() => {
  
 
 test('Should create a new post', async () => {
-    const response = await request(app).post('/post').send({
-        title: postTitle,
-        content: postContent
-    }).expect(201);
+    const response = await request(app)
+                    .post('/post')
+                    .set('Authorization', `Bearer ${globalToken}`)
+                    .send({
+                        title: postTitle,
+                        content: postContent
+                    }).expect(201);
 
-    // complete test !!!
+    // verify response
+    expect(response.body).not.toBeNull();
 
-    // // verify response
-    // expect(response.body.user).not.toBeNull();
+    createdPost = response.body;
 
-    // // Assert that the database was changed correctly
-    // const user = await usersService.getUser(email);
-    // expect(user).not.toBeNull();
+    // Assert that the database was changed correctly
+    const post = await postsService.getUserPost(response.body.id);
+    expect(post).not.toBeNull();
 
-    // // verify token
-    // const decoded = jwt.verify(response.body.token, process.env.JWT_SECRET);
-
-    // expect(decoded).not.toBeNull();
-
-    // expect(user.password).not.toBe(password);
-
-    // const token = await tokensService.getToken(response.body.token,user._id);
-    // expect(token).not.toBeNull();
-
-    // globalToken = response.body.token;
-    // globalUser = user;
+    expect(response.body).toEqual({title: post.title, content: post.content, id: post._id.toString(), creator : post.creator.name});
 });
+
+test('Should update a  post', async () => {
+    postTitle = "update title";
+    postContent = "update content";
+
+    const response = await request(app)
+                    .put('/post/'+createdPost.id)
+                    .set('Authorization', `Bearer ${globalToken}`)
+                    .send({
+                        title: postTitle,
+                        content: postContent
+                    }).expect(200);
+
+    // Assert that the database was changed correctly
+    const post = await postsService.getUserPost(createdPost.id);
+    expect(post).toMatchObject({title: postTitle, content: postContent});
+});
+
+test('Should get a post', async () => {
+ 
+    const response = await request(app)
+                    .get('/post/'+createdPost.id)
+                    .send().expect(200);
+
+    // verify response
+    expect(response.body).not.toBeNull();
+    expect(response.body).toEqual({title: postTitle, content: postContent, creator : globalUser.name , id : createdPost.id});
+});
+
+test('Should get a all post', async () => {
+ 
+    const response = await request(app)
+                    .get('/post')
+                    .send().expect(200);
+
+    // verify response
+    expect(response.body).not.toBeNull();
+    expect(response.body[0]).toEqual({title: postTitle, content: postContent, creator : globalUser.name , id : createdPost.id});
+});
+
+
+test('Should delete a post', async () => {
+    await request(app)
+        .delete('/post/'+createdPost.id )
+        .set('Authorization', `Bearer ${globalToken}`)
+        .send()
+        .expect(200);
+
+    const post = await postsService.getUserPost(createdPost.id);
+    expect(post).toBeNull();
+});
+
+
+
 

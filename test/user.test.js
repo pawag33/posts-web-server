@@ -13,7 +13,7 @@ let globalToken;
 let globalUser;
 
 
-beforeAll(() => {
+beforeAll( async () => {
    await db.connectToDb();
   });
 
