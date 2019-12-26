@@ -13,10 +13,6 @@ const disconnetFromDb = async () => {
      mongoose.connection.close();
 }
 
-(async () => {
-    mongoose.connection.close();
-})
-
 module.exports = {
     connectToDb,
     disconnetFromDb
