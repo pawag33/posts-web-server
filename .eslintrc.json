@@ -1,11 +1,11 @@
 {
     "env": {
-        "node": true,
         "commonjs": true,
-        "es6": true
+        "es6": true,
+        "node": true
     },
     "extends": [
-        "airbnb"
+        "airbnb-base"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -15,6 +15,9 @@
         "ecmaVersion": 2018
     },
     "rules": {
-        "indent": [4, "tab"]
+        "linebreak-style":["error", "windows"],
+        "indent": ["error", 4],
+        "no-underscore-dangle": [2, { "allow": ["_id"] }],
+        "no-console": ["error", { "allow": ["warn","log"] } ]
     }
 }
