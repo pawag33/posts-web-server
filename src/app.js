@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('./middleware/cors');
+const cors = require('cors');
 const userRouter = require('./routers/user.route');
 const postRouter = require('./routers/post.route')
 
@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express();
 
 app.use(express.json());
-app.use(cors);
+app.use(cors());
 
 app.use(userRouter);
 app.use(postRouter);
