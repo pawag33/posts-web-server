@@ -15,9 +15,10 @@
         "ecmaVersion": 2018
     },
     "rules": {
-        "linebreak-style":["error", "windows"],
+        "linebreak-style":0,
         "indent": ["error", 4],
         "no-underscore-dangle": [2, { "allow": ["_id"] }],
-        "no-console": ["error", { "allow": ["warn","log"] } ]
+        "no-console": ["error", { "allow": ["warn","log"] } ],
+        "eol-last":0
     }
 }
