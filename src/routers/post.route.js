@@ -12,7 +12,6 @@ router.post('/post', auth, async (req, res) => {
         });
     } catch (e) {
         console.log(e);
-        // log e
         res.status(400).send();
     }
 });
@@ -23,7 +22,6 @@ router.delete('/post/:id', auth, async (req, res) => {
         res.status(200).send();
     } catch (e) {
         console.log(e);
-        // log e
         res.status(500).send();
     }
 });
@@ -34,7 +32,6 @@ router.put('/post/:id', auth, async (req, res) => {
         res.status(200).send();
     } catch (e) {
         console.log(e);
-        // log e
         res.status(500).send();
     }
 });
@@ -47,7 +44,6 @@ router.get('/post/:id', async (req, res) => {
         });
     } catch (e) {
         console.log(e);
-        // log e
         res.status(500).send();
     }
 });
@@ -61,7 +57,6 @@ router.get('/post', async (req, res) => {
         res.status(200).send(postsRes);
     } catch (e) {
         console.log(e);
-        // log e
         res.status(500).send();
     }
 });

@@ -5,15 +5,11 @@ const saveToken = async (user, tokenStr) => {
     await token.save();
 };
 
-const getToken = async (tokenStr, userId) => {
-    const token = await TokenDbModel.findOne({ token: tokenStr, user: userId });
-    return token;
-};
+const getToken = async (tokenStr, userId) => TokenDbModel.findOne(
+    { token: tokenStr, user: userId },
+);
 
-const getUserTokens = async (userId) => {
-    const tokens = await TokenDbModel.find({ user: userId });
-    return tokens;
-};
+const getUserTokens = async (userId) => TokenDbModel.find({ user: userId });
 
 const deleteAllTokens = async () => {
     await TokenDbModel.deleteMany({});

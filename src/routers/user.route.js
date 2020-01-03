@@ -12,7 +12,6 @@ router.post('/user', async (req, res) => {
         res.status(201).send({ token, user: { email: user.email, name: user.name } });
     } catch (e) {
         console.log(e);
-        // log e
         res.status(400).send();
     }
 });
@@ -25,7 +24,6 @@ router.delete('/user', auth, async (req, res) => {
         res.status(200).send();
     } catch (e) {
         console.log(e);
-        // log e
         res.status(500).send();
     }
 });
