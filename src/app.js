@@ -1,9 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const userRouter = require('./routers/user.route');
-const postRouter = require('./routers/post.route')
+const postRouter = require('./routers/post.route');
+
 
 if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line global-require
     const dotenv = require('dotenv');
     dotenv.config();
 }

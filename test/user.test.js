@@ -1,8 +1,8 @@
+const request = require('supertest');
+const jwt = require('jsonwebtoken');
 const usersService = require('../src/services/users.service');
 const tokensService = require('../src/services/tokens.service');
-const request = require('supertest');
 const app = require('../src/app');
-const jwt = require('jsonwebtoken');
 const db = require('../src/db/mongoose');
 
 const email = 'test1@test.com';
@@ -11,24 +11,24 @@ const password = 'Very@StrongPass777';
 let globalToken;
 let globalUser;
 
-beforeAll( async () => {
-   await db.connectToDb();
+beforeAll(async () => {
+    await db.connectToDb();
 });
 
 afterAll(async () => {
-      try{
-          // in case of delete test was failed
-         await  usersService.deleteUser(email);
-      }
-      catch(err) {}
-      await db.disconnetFromDb();
+    try {
+        // in case of delete test was failed
+        await usersService.deleteUser(email);
+    // eslint-disable-next-line no-empty
+    } catch (err) {}
+    await db.disconnetFromDb();
 });
 
 test('Should signup a new user', async () => {
     const response = await request(app).post('/user').send({
-        name: name,
-        email: email,
-        password: password
+        name,
+        email,
+        password,
     }).expect(201);
 
     // verify response
@@ -45,7 +45,7 @@ test('Should signup a new user', async () => {
 
     expect(user.password).not.toBe(password);
 
-    const token = await tokensService.getToken(response.body.token,user._id);
+    const token = await tokensService.getToken(response.body.token, user._id);
     expect(token).not.toBeNull();
 
     globalToken = response.body.token;
@@ -54,17 +54,17 @@ test('Should signup a new user', async () => {
 
 test('Should login existing user', async () => {
     const response = await request(app).post('/user/login').send({
-        email: email,
-        password: password
+        email,
+        password,
     }).expect(200);
 
 
-     // verify token
-     expect(response.body.token).not.toBeNull();
-     const decoded = jwt.verify(response.body.token, process.env.JWT_SECRET);
-     expect(decoded).not.toBeNull();
-     const token = await tokensService.getToken(response.body.token,globalUser._id)
-     expect(token).not.toBeNull();
+    // verify token
+    expect(response.body.token).not.toBeNull();
+    const decoded = jwt.verify(response.body.token, process.env.JWT_SECRET);
+    expect(decoded).not.toBeNull();
+    const token = await tokensService.getToken(response.body.token, globalUser._id);
+    expect(token).not.toBeNull();
 });
 
 test('Should delete account for user', async () => {
@@ -79,5 +79,3 @@ test('Should delete account for user', async () => {
     const anyUserToken = await tokensService.getUserTokens(globalUser._id);
     expect(anyUserToken).toEqual([]);
 });
-
-

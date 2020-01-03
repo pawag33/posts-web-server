@@ -1,7 +1,11 @@
 const PostDbModel = require('../db-models/post.db-model');
 
-const createPost = async (post,userId) => {
-    const postDbModel = new PostDbModel({title:post.title,content:post.content,creator:userId});
+const createPost = async (post, userId) => {
+    const postDbModel = new PostDbModel({
+        title: post.title,
+        content: post.content,
+        creator: userId,
+    });
     await postDbModel.save();
     return postDbModel;
 };
@@ -16,11 +20,11 @@ const getUsersPosts = async () => {
     return foundUsersPosts;
 };
 
-const deleteUserPost = async (postId,userId) => {
+const deleteUserPost = async (postId, userId) => {
     await PostDbModel.deleteOne({ _id: postId, creator: userId });
 };
 
-const updateUserPost = async (post,postId,userId) => {
+const updateUserPost = async (post, postId, userId) => {
     await PostDbModel.updateOne({ _id: postId, creator: userId }, post);
 };
 
@@ -29,5 +33,5 @@ module.exports = {
     getUserPost,
     getUsersPosts,
     deleteUserPost,
-    updateUserPost
+    updateUserPost,
 };

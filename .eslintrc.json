@@ -2,7 +2,9 @@
     "env": {
         "commonjs": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "jest": true,
+        "jest/globals": true
     },
     "extends": [
         "airbnb-base"
@@ -14,6 +16,7 @@
     "parserOptions": {
         "ecmaVersion": 2018
     },
+    "plugins": ["jest"],
     "rules": {
         "linebreak-style":0,
         "indent": ["error", 4],

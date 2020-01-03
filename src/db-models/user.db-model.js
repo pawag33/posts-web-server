@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
     },
     email: {
         type: String,
@@ -15,9 +15,9 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         validate(value) {
             if (!validator.isEmail(value)) {
-                throw new Error('Email is invalid')
+                throw new Error('Email is invalid');
             }
-        }
+        },
     },
     password: {
         type: String,
@@ -26,12 +26,12 @@ const userSchema = new mongoose.Schema({
         trim: true,
         validate(value) {
             if (value.toLowerCase().includes('password')) {
-                throw new Error('Password cannot contain "password"')
+                throw new Error('Password cannot contain "password"');
             }
-        }
-    }
+        },
+    },
 }, {
-    timestamps: true
+    timestamps: true,
 });
 
 const UserDbModel = mongoose.model('User', userSchema);
