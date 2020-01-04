@@ -25,7 +25,7 @@ afterAll(async () => {
 });
 
 test('Should signup a new user', async () => {
-    const response = await request(app).post('/user').send({
+    const response = await request(app).post('/users').send({
         name,
         email,
         password,
@@ -53,7 +53,7 @@ test('Should signup a new user', async () => {
 });
 
 test('Should login existing user', async () => {
-    const response = await request(app).post('/user/login').send({
+    const response = await request(app).post('/users/login').send({
         email,
         password,
     }).expect(200);
@@ -69,7 +69,7 @@ test('Should login existing user', async () => {
 
 test('Should delete account for user', async () => {
     await request(app)
-        .delete('/user')
+        .delete('/users')
         .set('Authorization', `Bearer ${globalToken}`)
         .send()
         .expect(200);

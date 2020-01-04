@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const userRouter = require('./routers/user.route');
-const postRouter = require('./routers/post.route');
+const usersRouter = require('./routers/users.route');
+const postRouter = require('./routers/posts.route');
 
 
 if (process.env.NODE_ENV !== 'production') {
@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use(userRouter);
+app.use(usersRouter);
 app.use(postRouter);
 
 // Resource not found
